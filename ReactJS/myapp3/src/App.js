@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import Login_form from './Login-form';
+
+import Welcome from './welcome';
 
 
 class App extends Component {
   render() {
     return (
       <div>
-        <Login_form/>
+        <Welcome name='react' email="huy@gmail.com"/>
       </div>
     );
   }
 }
-
 export default App;
