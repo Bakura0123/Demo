@@ -5,11 +5,27 @@ import './Header.css';
 class Header extends Component {
     constructor(props) {
         super(props);
-       // this.state = { logged: true };
+        this.state = { logged: true };
     }
 
+
+    ComponentDidMount() {
+        if (this.state.logged === false) {
+            if (window.location.pathname != "/login") {
+                window.location.href = "/login";
+            }
+        }
+    }
+
+    getSession() {
+        let session = window.localStorage.getItem("session");
+        if (session != null) {
+            return JSON.parse(session);
+        }
+        return null;
+    }
     buildMenus() {
-        let menus = []; 
+        let menus = [];
         if (this.props.logged) {
             menus.push((
                 <Nav key={1}>
@@ -34,29 +50,33 @@ class Header extends Component {
         return menus;
     }
     onLogout(event) {
-        window.isLogged=false;
+        window.localStorage.removeItem("session");
         //this.setState({ logged: false });
         //this.props.onLogout();
-        window.location.href="/login";
+        window.location.href = "/login";
+        event.preventDefault();
     }
+
     render() {
-        let menus=this.buildMenus();
-        
+        let menus = [];
+        let headerTemplate = [];
+        if (this.state.logged === true && window.location.pathname != "/login") {
+            menus = this.buildMenus();
+            headerTemplate.push((
+                <Navbar key={1} fluid={true} className="primary-color">
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            <a href="/">GUNI</a>
+                        </Navbar.Brand>
+
+                    </Navbar.Header>
+                    {menus}
+                </Navbar>
+            ));
+        }
         return (
             <div>
-            <Navbar fluid={true} inverse collapseOnSelect>
-                <Navbar.Header>
-                    <Navbar.Brand>
-                        <a href="/">GUNI</a>
-                    </Navbar.Brand>
-                    <Navbar.Toggle />
-                </Navbar.Header>
-                {menus}
-                <Navbar.Collapse>
-                    
-                </Navbar.Collapse>
-            </Navbar>
-           
+                {headerTemplate}
             </div>
 
         );
